@@ -140,6 +140,8 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 	char* server_id;
 	int* talkpower;
 	int* clientDataBaseId;
+	char str[124];
+	int i;
 	switch (type) {
 	case PLUGIN_SERVER:
 		if (ts3Functions.getServerVariableAsString(serverConnectionHandlerID, VIRTUALSERVER_NAME, &name) != ERROR_ok) { printf("Error getting virtual server name\n"); return; }
@@ -149,12 +151,40 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 		if (ts3Functions.getServerVariableAsString(serverConnectionHandlerID, VIRTUALSERVER_IP, &server_ip) != ERROR_ok) { printf("Error getting virtual server ip\n"); return; }
 		*data = (char*)malloc(INFODATA_BUFSIZE * sizeof(char));  // Must be allocated in the plugin!
 		snprintf(*data, INFODATA_BUFSIZE, "[B]Server Informations :[/B]\nName:  [color=#990000]%s[/color]\nUID: [color=#990000]%s[/color]\nIcon ID: [color=#990000]%d[/color]\nVirtualServer ID: [color=#990000]%s[/color]\nIP: [color=#990000]%s[/color]", name, uid, icon_id, server_id, server_ip);
+		
+		sprintf_s(str, 124, "\nName Length: [color=#990000]%d[/color]", strlen(name));
+		strcat_s(*data, INFODATA_BUFSIZE, str);
+		strcat_s(*data, INFODATA_BUFSIZE, "\nAdvanced Name Inspect:\n[color=#990000]");
+
+		i = 0;
+		while (name[i] != '\0') {
+			char output[4];
+			sprintf(output, "%02X ", name[i]);
+			strcat_s(*data, INFODATA_BUFSIZE, output);
+			i++;
+		}
+		strcat_s(*data, INFODATA_BUFSIZE, "[/color]");
+		
 		break;
 	case PLUGIN_CHANNEL:
 		if (ts3Functions.getChannelVariableAsString(serverConnectionHandlerID, id, CHANNEL_NAME, &name) != ERROR_ok) { printf("Error getting channel name\n"); return; }
 		if (ts3Functions.getChannelVariableAsInt(serverConnectionHandlerID, id, CHANNEL_ICON_ID, &icon_id) != ERROR_ok) { printf("Error getting channel icon_id\n"); return; }
 		*data = (char*)malloc(INFODATA_BUFSIZE * sizeof(char));  // Must be allocated in the plugin!
 		snprintf(*data, INFODATA_BUFSIZE, "[B]Channel Informations :[/B]\nName: [color=#990000]%s[/color]\nID: [color=#990000]%d[/color]\nIcon ID: [color=#990000]%d[/color]", name, id, icon_id);
+		
+		sprintf_s(str, 124, "\nName Length: [color=#990000]%d[/color]", strlen(name));
+		strcat_s(*data, INFODATA_BUFSIZE, str);
+		strcat_s(*data, INFODATA_BUFSIZE, "\nAdvanced Name Inspect:\n[color=#990000]");
+
+		i = 0;
+		while (name[i] != '\0') {
+			char output[4];
+			sprintf(output, "%02X ", name[i]);
+			strcat_s(*data, INFODATA_BUFSIZE, output);
+			i++;
+		}
+		strcat_s(*data, INFODATA_BUFSIZE, "[/color]");
+
 		break;
 	case PLUGIN_CLIENT:
 		if (ts3Functions.getClientVariableAsString(serverConnectionHandlerID, (anyID)id, CLIENT_NICKNAME, &name) != ERROR_ok) { printf("Error getting client nickname\n"); return; }
@@ -164,6 +194,20 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 		if (ts3Functions.getClientVariableAsInt(serverConnectionHandlerID, (anyID)id, CLIENT_ICON_ID, &icon_id) != ERROR_ok) { printf("Error getting client icon id\n"); return; }
 		*data = (char*)malloc(INFODATA_BUFSIZE * sizeof(char));  // Must be allocated in the plugin!
 		snprintf(*data, INFODATA_BUFSIZE, "[B]Client Informations :[/B]\nName:  [color=#990000]%s[/color]\nUID: [color=#990000]%s[/color]\nID: [color=#990000]%d[/color]\nDBID: [color=#990000]%d[/color]\nTalkPower: [color=#990000]%d[/color]\nIcon ID: [color=#990000]%d[/color]", name, uid, (anyID)id, clientDataBaseId, talkpower, icon_id);
+		
+		sprintf_s(str, 124, "\nName Length: [color=#990000]%d[/color]", strlen(name));
+		strcat_s(*data, INFODATA_BUFSIZE, str);
+		strcat_s(*data, INFODATA_BUFSIZE, "\nAdvanced Name Inspect:\n[color=#990000]");
+
+		i = 0;
+		while (name[i] != '\0') {
+			char output[4];
+			sprintf(output, "%02X ", name[i]);
+			strcat_s(*data, INFODATA_BUFSIZE, output);
+			i++;
+		}
+		strcat_s(*data, INFODATA_BUFSIZE, "[/color]");
+		
 		break;
 	default:
 		printf("Invalid item type: %d\n", type);
